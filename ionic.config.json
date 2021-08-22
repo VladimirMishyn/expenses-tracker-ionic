@@ -1,0 +1,7 @@
+{
+  "name": "expenses-tracker-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
