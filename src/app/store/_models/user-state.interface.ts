@@ -1,4 +1,4 @@
-import { UserInterface } from '../../app/_models/user.interface';
+import { UserInterface } from '../../_models/user.interface';
 
 export interface UserStateInterface {
   user: UserInterface | null;
