@@ -10,6 +10,11 @@ import { CreateExpenseComponent } from './components/create-expense/create-expen
 import { ExpensesViewComponent } from './components/expenses-view/expenses-view.component';
 import { EditExpenseComponent } from './components/edit-expense/edit-expense.component';
 import { ExpenseService } from './services/expense.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { ExpenseEffects } from './store/effects/expense.effects';
+import { expenseReducer } from './store/reducers/expense.reducer';
 
 @NgModule({
   declarations: [
@@ -21,6 +26,13 @@ import { ExpenseService } from './services/expense.service';
     EditExpenseComponent,
   ],
   providers: [ExpenseService],
-  imports: [CommonModule, IonicModule, ExpensesRoutingModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    ReactiveFormsModule,
+    ExpensesRoutingModule,
+    EffectsModule.forFeature([ExpenseEffects]),
+    StoreModule.forFeature('expenses', expenseReducer),
+  ],
 })
 export class ExpensesModule {}

@@ -4,11 +4,14 @@ import { CreateExpenseComponent } from './components/create-expense/create-expen
 import { EditExpenseComponent } from './components/edit-expense/edit-expense.component';
 import { ExpensesViewComponent } from './components/expenses-view/expenses-view.component';
 import { ExpensesComponent } from './components/expenses/expenses.component';
+import { ParamsGuard } from './guards/params.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: ExpensesComponent,
+    canActivate: [ParamsGuard],
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
     children: [
       { path: '', component: ExpensesViewComponent },
       { path: 'new', component: CreateExpenseComponent },

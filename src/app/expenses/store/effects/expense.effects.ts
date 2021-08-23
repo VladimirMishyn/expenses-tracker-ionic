@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, first, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 import { ExpenseService } from '../../services/expense.service';
@@ -13,14 +13,28 @@ import {
   getInitialExpensesFailureAction,
   getInitialExpensesSuccessAction,
 } from '../actions/expenses.actions';
+import { routerNavigatedAction } from '@ngrx/router-store';
+import { jsonStringifyCompare } from '../../../_helpers/json-stringify-compare';
 
 @Injectable()
-export class UserEffects {
+export class ExpenseEffects {
+  onRouteChange$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      map((nextRoute) => nextRoute.payload.routerState.root.queryParams),
+      distinctUntilChanged(jsonStringifyCompare),
+
+      map((query) => {
+        return getInitialExpensesAction({ query });
+      })
+    );
+  });
+
   queryExpenses$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(getInitialExpensesAction),
-      switchMap(({ dates }) =>
-        this.expenseService.queryExpenses(dates).pipe(
+      switchMap(({ query }) =>
+        this.expenseService.queryExpenses(query).pipe(
           map((expenses) => getInitialExpensesSuccessAction({ expenses })),
           catchError((error: string) => of(getInitialExpensesFailureAction()))
         )
@@ -40,9 +54,5 @@ export class UserEffects {
     );
   });
 
-  constructor(
-    private actions$: Actions,
-    private alertController: AlertController,
-    private expenseService: ExpenseService
-  ) {}
+  constructor(private actions$: Actions, private expenseService: ExpenseService) {}
 }

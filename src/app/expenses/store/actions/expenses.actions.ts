@@ -2,10 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { ExpenseInterface } from '../../_models/expense.interface';
 import { ExpenseActionTypes } from './expense.ation-types';
 
-export const getInitialExpensesAction = createAction(
-  ExpenseActionTypes.loadExpensesInitial,
-  props<{ dates: string }>()
-);
+export const getInitialExpensesAction = createAction(ExpenseActionTypes.loadExpensesInitial, props<{ query: any }>());
 export const getInitialExpensesSuccessAction = createAction(
   ExpenseActionTypes.loadExpensesInitialSuccess,
   props<{ expenses: Array<ExpenseInterface> }>()

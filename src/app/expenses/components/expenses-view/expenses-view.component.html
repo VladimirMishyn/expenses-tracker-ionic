@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-grid>
+  <!-- <ion-grid>
     <ion-row>
       <ion-col offset="3" size="3">
         <ion-item>
@@ -14,7 +14,19 @@
         </ion-item>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
 
-  <app-expenses-dashbord></app-expenses-dashbord> <app-expenses-list></app-expenses-list>
+  <app-expenses-dashbord></app-expenses-dashbord>
+  <ion-button shape="block" expand="full" routerLink="./new" queryParamsHandling="preserve">
+    <ion-icon name="add-circle"></ion-icon>
+    Add expense
+  </ion-button>
+  <div *ngIf="expensesList$ | async as expenses">
+    <!-- <ion-list>
+      <ion-item *ngFor="let exp of expenses">
+        <ion-label>{{ exp.description }}</ion-label>
+      </ion-item>
+    </ion-list> -->
+    <app-expenses-list [expenses]="expenses"></app-expenses-list>
+  </div>
 </ion-content>

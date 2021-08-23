@@ -1,4 +1,5 @@
 export enum ExpenseActionTypes {
+  tryReloadExpenses = '[Check new params] query state changed maybe',
   loadExpensesInitial = '[On expenses page] Fetching first portion of expensions',
   loadExpensesInitialSuccess = '[Expensions API] Fetching first portion of expensions success',
   loadExpensesInitialFailure = '[Expensions API] Fetching first portion of expensions failure',
