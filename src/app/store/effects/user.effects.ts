@@ -16,6 +16,7 @@ import {
   signInAction,
   signInFailureAction,
   signInSuccessAction,
+  unauthorizedAccessAction,
 } from '../actions/user.actions';
 import { AuthService } from '../../auth/services/auth.service';
 import { AlertController, LoadingController } from '@ionic/angular';
@@ -101,10 +102,20 @@ export class UserEffects {
     () => {
       return this.actions$.pipe(
         ofType(logoutAction),
-        // TODO: Change this hotfix
-        switchMap(() => this.authService.tokenValue),
-        filter((token) => !!token),
         switchMap(() => this.authService.logout()),
+        switchMap(() => this.authService.removeToken().pipe(first())),
+        tap(() => {
+          this.router.navigateByUrl('/authorize');
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  unauthorizedEffect$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(unauthorizedAccessAction),
         switchMap(() => this.authService.removeToken().pipe(first())),
         tap(() => {
           this.router.navigateByUrl('/authorize');

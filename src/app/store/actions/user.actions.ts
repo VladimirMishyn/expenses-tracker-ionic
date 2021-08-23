@@ -27,6 +27,7 @@ export const signInSuccessAction = createAction(
 export const signInFailureAction = createAction(UserActionTypes.createUserFailure, props<{ error: string }>());
 
 export const logoutAction = createAction(UserActionTypes.logout);
+export const unauthorizedAccessAction = createAction(UserActionTypes.unauthorizedAccess);
 
 export const getUser = createAction(UserActionTypes.getCurrentUser);
 

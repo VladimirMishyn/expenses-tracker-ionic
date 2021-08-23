@@ -12,4 +12,5 @@ export enum UserActionTypes {
   getCurrentUserFailure = '[API Auth] Requesting user failure',
 
   logout = '[User click] Logout button clicked',
+  unauthorizedAccess = '[Interceptor] Interceptor received 401',
 }

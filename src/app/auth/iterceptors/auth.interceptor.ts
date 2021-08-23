@@ -4,7 +4,7 @@ import { from, Observable, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { logoutAction } from '../../store/actions/user.actions';
+import { unauthorizedAccessAction } from '../../store/actions/user.actions';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            this.store.dispatch(logoutAction());
+            this.store.dispatch(unauthorizedAccessAction());
           }
           return throwError(error);
         })
