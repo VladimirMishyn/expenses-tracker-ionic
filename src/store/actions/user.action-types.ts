@@ -7,5 +7,9 @@ export enum UserActionTypes {
   createUserSuccess = '[API Auth] Creating user success',
   createUserFailure = '[API Auth] Creating user failure',
 
+  getCurrentUser = '[Inside of application] User has ',
+  getCurrentUserSuccess = '[API Auth] Requesting user success',
+  getCurrentUserFailure = '[API Auth] Requesting user failure',
+
   logout = '[API Auth] Logout',
 }
