@@ -25,3 +25,14 @@ export const signInSuccessAction = createAction(
 );
 
 export const signInFailureAction = createAction(UserActionTypes.createUserFailure, props<{ error: string }>());
+
+export const logoutAction = createAction(UserActionTypes.logout);
+
+export const getUser = createAction(UserActionTypes.getCurrentUser);
+
+export const getUserSuccessAction = createAction(
+  UserActionTypes.getCurrentUserSuccess,
+  props<{ user: UserInterface }>()
+);
+
+export const getUserFailureAction = createAction(UserActionTypes.getCurrentUserFailure, props<{ error: string }>());

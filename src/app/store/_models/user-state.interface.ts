@@ -2,7 +2,7 @@ import { UserInterface } from '../../_models/user.interface';
 
 export interface UserStateInterface {
   user: UserInterface | null;
-  isLoggedIn: boolean;
+  isLoaded: boolean;
   isLoading: boolean;
   error: string | null;
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { signInAction } from '../../../store/actions/user.actions';
 import { compareFieldsEqual } from '../../../_helpers/compare-fields-equal';
 
 @Component({
@@ -9,7 +11,7 @@ import { compareFieldsEqual } from '../../../_helpers/compare-fields-equal';
 })
 export class SignInComponent implements OnInit {
   public signInForm: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
     this.signInForm = this.fb.group(
@@ -25,7 +27,10 @@ export class SignInComponent implements OnInit {
     );
   }
 
-  signIn(): void {}
+  signIn(): void {
+    const { name, email, password } = this.signInForm.value;
+    this.store.dispatch(signInAction({ name, email, password }));
+  }
 
   get name() {
     return this.signInForm.get('name');

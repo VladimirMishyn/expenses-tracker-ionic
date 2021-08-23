@@ -1,14 +1,18 @@
 /* eslint-disable arrow-body-style */
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { UserInterface } from '../../_models/user.interface';
 import {
+  getUser,
+  getUserFailureAction,
+  getUserSuccessAction,
   loginAction,
   loginFailureAction,
   loginSuccessAction,
+  logoutAction,
   signInAction,
   signInFailureAction,
   signInSuccessAction,
@@ -47,11 +51,25 @@ export class UserEffects {
     );
   });
 
+  getUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(getUser),
+      switchMap(() =>
+        this.authService.getUser().pipe(
+          map((user) => getUserSuccessAction({ user })),
+          catchError((error: string) => of(getUserFailureAction({ error })))
+        )
+      )
+    );
+  });
+
   successfulLoginOrSignUp$ = createEffect(
     () => {
       return this.actions$.pipe(
         ofType(loginSuccessAction, signInSuccessAction),
-        tap(() => {
+        tap((response) => {
+          console.log(response);
+          this.authService.token = response.token;
           this.router.navigateByUrl('/');
         })
       );
@@ -59,11 +77,12 @@ export class UserEffects {
     { dispatch: false }
   );
 
-  errorLoginOrSignIn = createEffect(
+  errorLoginOrSignIn$ = createEffect(
     () => {
       return this.actions$.pipe(
         ofType(loginFailureAction, signInFailureAction),
         tap(async (response) => {
+          console.log(response);
           const alert = await this.alertController.create({
             header: 'Login/Sign in failed',
             message: response.error,
@@ -71,6 +90,20 @@ export class UserEffects {
           });
 
           await alert.present();
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  logoutEffect$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(logoutAction),
+        switchMap(() => this.authService.logout()),
+        switchMap(() => this.authService.removeToken()),
+        tap(() => {
+          this.router.navigateByUrl('/authorize');
         })
       );
     },
