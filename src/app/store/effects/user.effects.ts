@@ -1,9 +1,9 @@
 /* eslint-disable arrow-body-style */
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, first, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import { UserInterface } from '../../_models/user.interface';
 import {
   getUser,
@@ -19,6 +19,7 @@ import {
 } from '../actions/user.actions';
 import { AuthService } from '../../auth/services/auth.service';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { createDefaultFilters } from '../../_helpers/create-default-filters';
 
 export interface AuthResponseInterface {
   user: UserInterface;
@@ -70,7 +71,7 @@ export class UserEffects {
         tap((response) => {
           console.log(response);
           this.authService.token = response.token;
-          this.router.navigateByUrl('/');
+          this.router.navigate(['/expenses'], { queryParams: createDefaultFilters() });
         })
       );
     },
@@ -100,8 +101,11 @@ export class UserEffects {
     () => {
       return this.actions$.pipe(
         ofType(logoutAction),
+        // TODO: Change this hotfix
+        switchMap(() => this.authService.tokenValue),
+        filter((token) => !!token),
         switchMap(() => this.authService.logout()),
-        switchMap(() => this.authService.removeToken()),
+        switchMap(() => this.authService.removeToken().pipe(first())),
         tap(() => {
           this.router.navigateByUrl('/authorize');
         })

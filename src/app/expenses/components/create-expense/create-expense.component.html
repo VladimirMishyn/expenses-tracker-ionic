@@ -1,0 +1,32 @@
+<form (ngSubmit)="saveExpense($event)" [formGroup]="newExpenseForm">
+  <ion-list>
+    <ion-item>
+      <ion-input type="text" placeholder="POTRACHENO" formControlName="description"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="(description.dirty || description.touched) && description.errors" class="errors">
+      <span *ngIf="description.errors?.required">Description is required</span>
+    </ion-item>
+    <ion-item>
+      <ion-input type="number" formControlName="amount" autocomplete="off"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="(amount.dirty || amount.touched) && amount.errors" class="errors">
+      <span *ngIf="amount.errors?.required">Field is required</span>
+      <span *ngIf="amount.errors?.min">eto hitro</span>
+    </ion-item>
+    <ion-item>
+      <ion-label>Currency</ion-label>
+      <ion-select placeholder="Select One" formControlName="currency">
+        <ion-select-option value="USD">USD</ion-select-option>
+        <ion-select-option value="UAH">UAH</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select placeholder="Select Type" formControlName="type">
+        <ion-select-option value="card">Card</ion-select-option>
+        <ion-select-option value="cash">cash</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-button type="submit" expand="block" [disabled]="!newExpenseForm.valid">Save expense</ion-button>
+</form>
